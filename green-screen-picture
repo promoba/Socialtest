@@ -4,3 +4,30 @@ version: 1.0.0
 codeOwners:
   - '0x5F0f424472FC06E5a34eebFebd411e1a104Dd8B2'
 quorum: 1
+
+import cv2
+import numpy as np
+
+# Read the image with green screen background
+image = cv2.imread('green_screen_image.jpg')
+
+# Define the range of green color in HSV
+lower_green = np.array([45, 100, 50])
+upper_green = np.array([75, 255, 255])
+
+# Convert the image to HSV color space
+hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+# Create a mask for the green color
+mask = cv2.inRange(hsv, lower_green, upper_green)
+
+# Invert the mask
+mask_inv = cv2.bitwise_not(mask)
+
+# Apply the mask to the original image
+result = cv2.bitwise_and(image, image, mask=mask_inv)
+
+# Display the result
+cv2.imshow('Result', result)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
